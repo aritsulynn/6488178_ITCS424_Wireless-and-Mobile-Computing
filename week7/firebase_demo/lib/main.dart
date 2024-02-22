@@ -5,7 +5,6 @@ import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
-  // TODO TASK #2
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -16,7 +15,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,8 +38,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final int _counter = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,23 +45,25 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: StreamBuilder(
-        stream:
-            // TODO TASK #3
-            FirebaseFirestore.instance.collection("animalData").snapshots(),
-        builder: (context, snapshot) {
-          return ListView.builder(
-            scrollDirection: Axis.vertical,
-            itemCount: snapshot.data?.docs.length,
-            itemBuilder: (context, index) {
-              print(snapshot.data?.docs[index]["title"]); // debugging
-              return ListTile(
-                // TODO TASK #4
-                title: Text(snapshot.data?.docs[index]["title"]),
-              );
-            },
-          );
-        },
+      body: Center(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection("users").snapshots(),
+          builder: (context, snapshot) {
+            return ListView.builder(
+              itemCount: snapshot.data?.docs.length,
+              itemBuilder: (context, index) {
+                var users = snapshot.data?.docs[index];
+                return Column(
+                  children: [
+                    Text(users?["fullname"]),
+                    Text(users?["studentID"]),
+                    Text("Goals: " + users?["goal"])
+                  ],
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
